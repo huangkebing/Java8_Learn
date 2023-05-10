@@ -82,56 +82,31 @@ public interface Collection<E> extends Iterable<E> {
 
     //--------------修改操作--------------
     /**
+     * 可选择实现操作
      * 如果此集合因调用而更改，则返回true；如果此集合不允许重复且已包含指定的元素，则返回false
+     * 支持此操作的集合可能会限制可以添加到此集合的元素,集合类应在其文档中明确指定对可以添加哪些元素的任何限制
+     * 如果集合除了已经包含该元素外的任何原因拒绝添加特定元素，则必须引发异常，而不是返回false
      *
-     * Collections that support this operation may place limitations on what
-     * elements may be added to this collection.  In particular, some
-     * collections will refuse to add <tt>null</tt> elements, and others will
-     * impose restrictions on the type of elements that may be added.
-     * Collection classes should clearly specify in their documentation any
-     * restrictions on what elements may be added.<p>
-     *
-     * If a collection refuses to add a particular element for any reason
-     * other than that it already contains the element, it <i>must</i> throw
-     * an exception (rather than returning <tt>false</tt>).  This preserves
-     * the invariant that a collection always contains the specified element
-     * after this call returns.
-     *
-     * @param e element whose presence in this collection is to be ensured
-     * @return <tt>true</tt> if this collection changed as a result of the
-     *         call
-     * @throws UnsupportedOperationException if the <tt>add</tt> operation
-     *         is not supported by this collection
-     * @throws ClassCastException if the class of the specified element
-     *         prevents it from being added to this collection
-     * @throws NullPointerException if the specified element is null and this
-     *         collection does not permit null elements
-     * @throws IllegalArgumentException if some property of the element
-     *         prevents it from being added to this collection
-     * @throws IllegalStateException if the element cannot be added at this
-     *         time due to insertion restrictions
+     * @param e 要确保其在此集合中的存在元素
+     * @return 如果此集合因调用而更改，则为 true
+     * @throws UnsupportedOperationException 如果此集合不支持添加操作
+     * @throws ClassCastException 如果指定元素的类阻止将其添加到此集合
+     * @throws NullPointerException 如果指定的元素为null，并且此集合不允许null元素
+     * @throws IllegalArgumentException 如果元素的某些属性阻止将其添加到此集合
+     * @throws IllegalStateException 如果由于插入限制而此时无法添加元素
      */
     boolean add(E e);
 
     /**
-     * Removes a single instance of the specified element from this
-     * collection, if it is present (optional operation).  More formally,
-     * removes an element <tt>e</tt> such that
-     * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>, if
-     * this collection contains one or more such elements.  Returns
-     * <tt>true</tt> if this collection contained the specified element (or
-     * equivalently, if this collection changed as a result of the call).
+     * 可选择实现操作
+     * 从此集合中删除指定元素的单个实例（如果存在），更正式地说，删除元素e，符合要求(o==null?e==null:o.equals(e))
+     * 如果此集合包含指定的元素（如果此集合由于调用而更改），则返回 true
      *
-     * @param o element to be removed from this collection, if present
-     * @return <tt>true</tt> if an element was removed as a result of this call
-     * @throws ClassCastException if the type of the specified element
-     *         is incompatible with this collection
-     *         (<a href="#optional-restrictions">optional</a>)
-     * @throws NullPointerException if the specified element is null and this
-     *         collection does not permit null elements
-     *         (<a href="#optional-restrictions">optional</a>)
-     * @throws UnsupportedOperationException if the <tt>remove</tt> operation
-     *         is not supported by this collection
+     * @param o 要从此集合中删除的元素（如果存在）
+     * @return 如果由于此调用而删除了元素，则为true
+     * @throws ClassCastException 如果指定元素的类型与此集合不兼容
+     * @throws NullPointerException 如果指定的元素为null，并且此集合不允许null元素
+     * @throws UnsupportedOperationException 如果此集合不支持删除操作
      */
     boolean remove(Object o);
 
