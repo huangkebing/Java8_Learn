@@ -4,91 +4,140 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/**
+ * 集合结构中的根接口。集合表示一组对象，这些对象称为元素。
+ * 某些集合允许重复元素，而某些集合则不允许，有些是有序的，有些是无序的。
+ * JDK 不提供此接口的任何直接实现：它提供了更具体的子接口（如Set和List）的实现。
+ * 此接口通常用于传递集合，并在需要最大通用性的地方操作它们。
+ *
+ * 所有通用Collection实现类（通常通过其子接口之一如List、Set间接实现 Collection）都应提供两个“标准”构造函数：
+ * 一个 void（无参数）构造函数，用于创建一个空集合，
+ * 以及一个有参构造函数，该构造函数具有单个Collection的参数，该构造函数创建与其参数具有相同元素的新集合
+ * 实际上，第二个构造函数允许用户复制任何集合，生成所需实现类型的等效集合
+ * 接口中无法强制实施此约定（因为接口不能包含构造函数），但Java平台库中的所有通用集合实现都符合此约定
+ *
+ * @param <E> 此集合中元素的类型
+ * @since 1.2
+ */
+
 public interface Collection<E> extends Iterable<E> {
-    // 查询元素
+    //--------------查询操作----------------
     /**
-     * 获得当前的容器大小
+     * 返回此集合中的元素数。如果此集合包含的元素数量超过Integer.MAX_VALUE，则返回Integer.MAX_VALUE
      */
     int size();
 
     /**
-     * 判断List是否为空
+     * 如果此集合不包含任何元素，则返回 true
      */
     boolean isEmpty();
 
     /**
-     * 判断是否包含某个元素
+     * 如果此集合包含指定的元素，则返回 true
+     * 更正式地说，当且仅当此集合包含至少一个元素e时返回true，使得o==null？e==null:o.equals(e)
+     *
+     * @param o 要测试其在此集合中的是否存在的元素
+     * @return 如果此集合包含指定的元素，则返回 true
+     * @throws ClassCastException 如果指定元素的类型与此集合不兼容
+     * @throws NullPointerException 如果指定的元素为 null，并且此集合不允许 null 元素
      */
     boolean contains(Object o);
 
     /**
-     * 获得迭代器
+     * 返回此集合中元素的迭代器。对于元素的返回顺序没有保证（除非此集合是提供顺序保证的集合实例）
      */
     Iterator<E> iterator();
 
     /**
-     * 转化为数组
+     * 返回一个包含此集合中所有元素的数组。如果此集合对其迭代器返回其元素的顺序做出任何保证，则此方法必须以相同的顺序返回元素
+     * 此方法会分配一个新数组，即使这个集合底层是依托数组实现的。因此，调用方修改数组不会影响集合
+     * 此方法充当数组和集合之间转化的桥梁
+     *
+     * @return 包含此集合中所有元素的数组
      */
     Object[] toArray();
 
     /**
-     * Returns an array containing all of the elements in this collection;
-     * the runtime type of the returned array is that of the specified array.
-     * If the collection fits in the specified array, it is returned therein.
-     * Otherwise, a new array is allocated with the runtime type of the
-     * specified array and the size of this collection.
+     * 返回包含此集合中所有元素的数组，返回数组的运行时类型是指定数组的运行时类型。
+     * 如果集合的元素数量在指定的数组中足够存放，则在其中返回该集合。否则，将使用指定数组的运行时类型和集合的大小分配一个新数组
      *
-     * <p>If this collection fits in the specified array with room to spare
-     * (i.e., the array has more elements than this collection), the element
-     * in the array immediately following the end of the collection is set to
-     * <tt>null</tt>.  (This is useful in determining the length of this
-     * collection <i>only</i> if the caller knows that this collection does
-     * not contain any <tt>null</tt> elements.)
+     * 如果数组的元素多于集合，则紧跟在集合末尾之后的数组中的元素会被设置为null
+     * 仅当调用方确定此集合不包含任何null元素时，这才可用于确定此集合的长度
      *
-     * <p>If this collection makes any guarantees as to what order its elements
-     * are returned by its iterator, this method must return the elements in
-     * the same order.
+     * 如果此集合对其迭代器返回其元素的顺序做出任何保证，则此方法必须以相同的顺序返回元素
+     * 与toArray()方法一样，此方法充当基于数组和基于集合的 API 之间的桥梁
+     * 此外，该方法允许精确控制输出数组的运行时类型，并且在某些情况下可用于节省分配成本
      *
-     * <p>Like the {@link #toArray()} method, this method acts as bridge between
-     * array-based and collection-based APIs.  Further, this method allows
-     * precise control over the runtime type of the output array, and may,
-     * under certain circumstances, be used to save allocation costs.
+     * 假设x是一个已知只包含字符串的集合。以下代码可用于将集合转储到新分配的String数组中：
+     * String[] y = x.toArray(new String[0]);
+     * 请注意，toArray(new Object[0])在方法上与toArray()相同
      *
-     * <p>Suppose <tt>x</tt> is a collection known to contain only strings.
-     * The following code can be used to dump the collection into a newly
-     * allocated array of <tt>String</tt>:
-     *
-     * <pre>
-     *     String[] y = x.toArray(new String[0]);</pre>
-     *
-     * Note that <tt>toArray(new Object[0])</tt> is identical in function to
-     * <tt>toArray()</tt>.
-     *
-     * @param <T> the runtime type of the array to contain the collection
-     * @param a the array into which the elements of this collection are to be
-     *        stored, if it is big enough; otherwise, a new array of the same
-     *        runtime type is allocated for this purpose.
-     * @return an array containing all of the elements in this collection
-     * @throws ArrayStoreException if the runtime type of the specified array
-     *         is not a supertype of the runtime type of every element in
-     *         this collection
-     * @throws NullPointerException if the specified array is null
+     * @param <T> 要包含集合的数组的运行时类型
+     * @param a 存储此集合的元素的数组（如果它足够大）;否则，将分配相同运行时类型的新数组
+     * @return 包含此集合中所有元素的数组
+     * @throws ArrayStoreException 如果指定数组的运行时类型不是此集合中每个元素的运行时类型的超类
+     * @throws NullPointerException 如果指定的数组为空
      */
     <T> T[] toArray(T[] a);
 
-    // 操作元素
+    //--------------修改操作--------------
     /**
-     * 添加元素
+     * 如果此集合因调用而更改，则返回true；如果此集合不允许重复且已包含指定的元素，则返回false
+     *
+     * Collections that support this operation may place limitations on what
+     * elements may be added to this collection.  In particular, some
+     * collections will refuse to add <tt>null</tt> elements, and others will
+     * impose restrictions on the type of elements that may be added.
+     * Collection classes should clearly specify in their documentation any
+     * restrictions on what elements may be added.<p>
+     *
+     * If a collection refuses to add a particular element for any reason
+     * other than that it already contains the element, it <i>must</i> throw
+     * an exception (rather than returning <tt>false</tt>).  This preserves
+     * the invariant that a collection always contains the specified element
+     * after this call returns.
+     *
+     * @param e element whose presence in this collection is to be ensured
+     * @return <tt>true</tt> if this collection changed as a result of the
+     *         call
+     * @throws UnsupportedOperationException if the <tt>add</tt> operation
+     *         is not supported by this collection
+     * @throws ClassCastException if the class of the specified element
+     *         prevents it from being added to this collection
+     * @throws NullPointerException if the specified element is null and this
+     *         collection does not permit null elements
+     * @throws IllegalArgumentException if some property of the element
+     *         prevents it from being added to this collection
+     * @throws IllegalStateException if the element cannot be added at this
+     *         time due to insertion restrictions
      */
     boolean add(E e);
 
     /**
-     * 删除指定元素
+     * Removes a single instance of the specified element from this
+     * collection, if it is present (optional operation).  More formally,
+     * removes an element <tt>e</tt> such that
+     * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>, if
+     * this collection contains one or more such elements.  Returns
+     * <tt>true</tt> if this collection contained the specified element (or
+     * equivalently, if this collection changed as a result of the call).
+     *
+     * @param o element to be removed from this collection, if present
+     * @return <tt>true</tt> if an element was removed as a result of this call
+     * @throws ClassCastException if the type of the specified element
+     *         is incompatible with this collection
+     *         (<a href="#optional-restrictions">optional</a>)
+     * @throws NullPointerException if the specified element is null and this
+     *         collection does not permit null elements
+     *         (<a href="#optional-restrictions">optional</a>)
+     * @throws UnsupportedOperationException if the <tt>remove</tt> operation
+     *         is not supported by this collection
      */
     boolean remove(Object o);
 
 
-    // 批量操作
+    // Bulk Operations
+
     /**
      * Returns <tt>true</tt> if this collection contains all of the elements
      * in the specified collection.
@@ -229,7 +278,7 @@ public interface Collection<E> extends Iterable<E> {
     void clear();
 
 
-    // Comparison and hashing
+    //--------------比较和哈希--------------
 
     /**
      * Compares the specified object with this collection for equality. <p>
