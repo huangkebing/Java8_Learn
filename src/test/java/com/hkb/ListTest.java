@@ -80,4 +80,23 @@ public class ListTest {
             }
         }
     }
+
+    /**
+     * for-each原理测试，字节码反编译后：
+     * List<Integer> list = new ArrayList();
+     * list.add(1);list.add(2);list.add(3);
+     * Iterator var2 = list.iterator();
+     * while(var2.hasNext()) {
+     *     Integer integer = (Integer)var2.next();
+     *     System.out.println(integer);
+     * }
+     */
+    @Test
+    public void iterableForEachTest(){
+        List<Integer> list = new ArrayList<>();
+        list.add(1);list.add(2);list.add(3);
+        for (Integer integer : list) {
+            System.out.println(integer);
+        }
+    }
 }

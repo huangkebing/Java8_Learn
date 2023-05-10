@@ -16,7 +16,7 @@ public interface Iterable<T> {
     Iterator<T> iterator();
 
     /**
-     * forEach方法默认实现
+     * forEach函数式接口的实现
      */
     default void forEach(Consumer<? super T> action) {
         Objects.requireNonNull(action);
@@ -26,7 +26,7 @@ public interface Iterable<T> {
     }
 
     /**
-     * 获得Spliterator对象
+     * 获得Spliterator(可拆分迭代器)对象
      */
     default Spliterator<T> spliterator() {
         return Spliterators.spliteratorUnknownSize(iterator(), 0);
