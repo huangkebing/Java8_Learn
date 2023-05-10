@@ -16,7 +16,7 @@ public interface Iterable<T> {
     Iterator<T> iterator();
 
     /**
-     * forEach函数式接口的实现
+     * forEach函数式接口的实现，本质还是for-each即迭代器
      */
     default void forEach(Consumer<? super T> action) {
         Objects.requireNonNull(action);
