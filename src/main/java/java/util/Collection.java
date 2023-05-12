@@ -111,99 +111,57 @@ public interface Collection<E> extends Iterable<E> {
     boolean remove(Object o);
 
 
-    // Bulk Operations
-
+    //--------------批量操作--------------
     /**
-     * Returns <tt>true</tt> if this collection contains all of the elements
-     * in the specified collection.
+     * 如果此集合包含指定集合中的所有元素，则返回 true。
      *
-     * @param  c collection to be checked for containment in this collection
-     * @return <tt>true</tt> if this collection contains all of the elements
-     *         in the specified collection
-     * @throws ClassCastException if the types of one or more elements
-     *         in the specified collection are incompatible with this
-     *         collection
-     *         (<a href="#optional-restrictions">optional</a>)
-     * @throws NullPointerException if the specified collection contains one
-     *         or more null elements and this collection does not permit null
-     *         elements
-     *         (<a href="#optional-restrictions">optional</a>),
-     *         or if the specified collection is null.
+     * @param  c 要检查是否在此集合中的元素的集合
+     * @return 如果此集合包含指定集合中的所有元素，则为 true
+     * @throws ClassCastException 如果指定集合中的一个或多个元素的类型与此集合不兼容
+     * @throws NullPointerException 如果指定的集合包含一个或多个null元素，并且此集合不允许null元素或者，如果指定的集合为null
      * @see    #contains(Object)
      */
     boolean containsAll(Collection<?> c);
 
     /**
-     * Adds all of the elements in the specified collection to this collection
-     * (optional operation).  The behavior of this operation is undefined if
-     * the specified collection is modified while the operation is in progress.
-     * (This implies that the behavior of this call is undefined if the
-     * specified collection is this collection, and this collection is
-     * nonempty.)
+     * 将指定集合中的所有元素添加到此集合（可选操作）
      *
-     * @param c collection containing elements to be added to this collection
-     * @return <tt>true</tt> if this collection changed as a result of the call
-     * @throws UnsupportedOperationException if the <tt>addAll</tt> operation
-     *         is not supported by this collection
-     * @throws ClassCastException if the class of an element of the specified
-     *         collection prevents it from being added to this collection
-     * @throws NullPointerException if the specified collection contains a
-     *         null element and this collection does not permit null elements,
-     *         or if the specified collection is null
-     * @throws IllegalArgumentException if some property of an element of the
-     *         specified collection prevents it from being added to this
-     *         collection
-     * @throws IllegalStateException if not all the elements can be added at
-     *         this time due to insertion restrictions
+     * @param c 包含要添加到此集合的元素的集合
+     * @return 如果此集合因调用而更改，则为true
+     * @throws UnsupportedOperationException 如果此集合不支持 addAll 操作
+     * @throws ClassCastException 如果指定集合的元素的类阻止将其添加到此集合
+     * @throws NullPointerException 如果指定的集合包含 null 元素，并且此集合不允许 null 元素，或者指定的集合为 null
+     * @throws IllegalArgumentException 如果指定集合的元素的某些属性阻止将其添加到此集合
+     * @throws IllegalStateException 如果由于插入限制，此时无法添加所有元素
      * @see #add(Object)
      */
     boolean addAll(Collection<? extends E> c);
 
     /**
-     * Removes all of this collection's elements that are also contained in the
-     * specified collection (optional operation).  After this call returns,
-     * this collection will contain no elements in common with the specified
-     * collection.
+     * 删除此集合中所有包含在指定集合中的元素(可选操作)。此调用返回后，此集合将不包含与指定集合相同的元素
      *
-     * @param c collection containing elements to be removed from this collection
-     * @return <tt>true</tt> if this collection changed as a result of the
-     *         call
-     * @throws UnsupportedOperationException if the <tt>removeAll</tt> method
-     *         is not supported by this collection
-     * @throws ClassCastException if the types of one or more elements
-     *         in this collection are incompatible with the specified
-     *         collection
-     *         (<a href="#optional-restrictions">optional</a>)
-     * @throws NullPointerException if this collection contains one or more
-     *         null elements and the specified collection does not support
-     *         null elements
-     *         (<a href="#optional-restrictions">optional</a>),
-     *         or if the specified collection is null
+     * @param c 包含要从此集合中删除的元素的集合
+     * @return 如果此集合因调用而更改，则为true
+     * @throws UnsupportedOperationException 如果此集合不支持removeAll方法
+     * @throws ClassCastException 如果此集合中一个或多个元素的类型与指定的集合不兼容
+     * @throws NullPointerException 如果此集合包含一个或多个null元素，并且指定的集合不支持null元素，或者如果指定的集合为null
      * @see #remove(Object)
      * @see #contains(Object)
      */
     boolean removeAll(Collection<?> c);
 
     /**
-     * Removes all of the elements of this collection that satisfy the given
-     * predicate.  Errors or runtime exceptions thrown during iteration or by
-     * the predicate are relayed to the caller.
+     * 删除此集合中满足给定predicate(即predicate判断为true)的所有元素
+     * 循环期间发生的错误或运行时异常将传递给调用方
      *
-     * @implSpec
-     * The default implementation traverses all elements of the collection using
-     * its {@link #iterator}.  Each matching element is removed using
-     * {@link Iterator#remove()}.  If the collection's iterator does not
-     * support removal then an {@code UnsupportedOperationException} will be
-     * thrown on the first matching element.
+     * 实现规范：
+     * 默认实现使用其迭代器遍历集合的所有元素。符合的元素使用迭代器的remove方法移除
+     * 如果集合的迭代器不支持删除，则会在第一个匹配元素上抛出{@code UnsupportedOperationException}
      *
-     * @param filter a predicate which returns {@code true} for elements to be
-     *        removed
-     * @return {@code true} if any elements were removed
-     * @throws NullPointerException if the specified filter is null
-     * @throws UnsupportedOperationException if elements cannot be removed
-     *         from this collection.  Implementations may throw this exception if a
-     *         matching element cannot be removed or if, in general, removal is not
-     *         supported.
+     * @param filter 一个predicate，它为要删除的元素返回{@code true}
+     * @return {@code true}如果删除了任何一个元素
+     * @throws NullPointerException 如果指定的filter为空
+     * @throws UnsupportedOperationException 如果无法从此集合中删除元素。如果无法删除匹配元素，或者通常不支持删除，则实现可能会引发此异常
      * @since 1.8
      */
     default boolean removeIf(Predicate<? super E> filter) {
@@ -220,70 +178,31 @@ public interface Collection<E> extends Iterable<E> {
     }
 
     /**
-     * Retains only the elements in this collection that are contained in the
-     * specified collection (optional operation).  In other words, removes from
-     * this collection all of its elements that are not contained in the
-     * specified collection.
+     * 仅保留此集合中包含在给定集合中的元素 (可选操作)
      *
-     * @param c collection containing elements to be retained in this collection
-     * @return <tt>true</tt> if this collection changed as a result of the call
-     * @throws UnsupportedOperationException if the <tt>retainAll</tt> operation
-     *         is not supported by this collection
-     * @throws ClassCastException if the types of one or more elements
-     *         in this collection are incompatible with the specified
-     *         collection
-     *         (<a href="#optional-restrictions">optional</a>)
-     * @throws NullPointerException if this collection contains one or more
-     *         null elements and the specified collection does not permit null
-     *         elements
-     *         (<a href="#optional-restrictions">optional</a>),
-     *         or if the specified collection is null
+     * @param c 包含要保留在此集合中的元素的集合
+     * @return 如果此集合因调用而更改，则为 true
+     * @throws UnsupportedOperationException 如果此集合不支持 retainAll 操作
+     * @throws ClassCastException 如果此集合中一个或多个元素的类型与给定的集合不兼容
+     * @throws NullPointerException 如果此集合包含一个或多个null元素，并且指定的集合不允许null元素，或者如果指定的集合为null
      * @see #remove(Object)
      * @see #contains(Object)
      */
     boolean retainAll(Collection<?> c);
 
     /**
-     * Removes all of the elements from this collection (optional operation).
-     * The collection will be empty after this method returns.
+     * 从此集合中删除所有元素 (可选操作)，此方法返回后，集合将为空。
      *
-     * @throws UnsupportedOperationException if the <tt>clear</tt> operation
-     *         is not supported by this collection
+     * @throws UnsupportedOperationException 如果此集合不支持清除操作
      */
     void clear();
 
 
     //--------------比较和哈希--------------
-
     /**
-     * Compares the specified object with this collection for equality. <p>
-     *
-     * While the <tt>Collection</tt> interface adds no stipulations to the
-     * general contract for the <tt>Object.equals</tt>, programmers who
-     * implement the <tt>Collection</tt> interface "directly" (in other words,
-     * create a class that is a <tt>Collection</tt> but is not a <tt>Set</tt>
-     * or a <tt>List</tt>) must exercise care if they choose to override the
-     * <tt>Object.equals</tt>.  It is not necessary to do so, and the simplest
-     * course of action is to rely on <tt>Object</tt>'s implementation, but
-     * the implementor may wish to implement a "value comparison" in place of
-     * the default "reference comparison."  (The <tt>List</tt> and
-     * <tt>Set</tt> interfaces mandate such value comparisons.)<p>
-     *
-     * The general contract for the <tt>Object.equals</tt> method states that
-     * equals must be symmetric (in other words, <tt>a.equals(b)</tt> if and
-     * only if <tt>b.equals(a)</tt>).  The contracts for <tt>List.equals</tt>
-     * and <tt>Set.equals</tt> state that lists are only equal to other lists,
-     * and sets to other sets.  Thus, a custom <tt>equals</tt> method for a
-     * collection class that implements neither the <tt>List</tt> nor
-     * <tt>Set</tt> interface must return <tt>false</tt> when this collection
-     * is compared to any list or set.  (By the same logic, it is not possible
-     * to write a class that correctly implements both the <tt>Set</tt> and
-     * <tt>List</tt> interfaces.)
-     *
-     * @param o object to be compared for equality with this collection
-     * @return <tt>true</tt> if the specified object is equal to this
-     * collection
-     *
+     * 参考Object.equals()
+     * @param o 要与此集合比较的对象
+     * @return 如果指定的对象等于此集合，则为 true
      * @see Object#equals(Object)
      * @see Set#equals(Object)
      * @see List#equals(Object)
@@ -291,70 +210,20 @@ public interface Collection<E> extends Iterable<E> {
     boolean equals(Object o);
 
     /**
-     * Returns the hash code value for this collection.  While the
-     * <tt>Collection</tt> interface adds no stipulations to the general
-     * contract for the <tt>Object.hashCode</tt> method, programmers should
-     * take note that any class that overrides the <tt>Object.equals</tt>
-     * method must also override the <tt>Object.hashCode</tt> method in order
-     * to satisfy the general contract for the <tt>Object.hashCode</tt> method.
-     * In particular, <tt>c1.equals(c2)</tt> implies that
-     * <tt>c1.hashCode()==c2.hashCode()</tt>.
+     * 返回此集合的哈希值
+     * 应该注意，任何重写Object.equals方法的类也必须重写Object.hashCode方法，以满足Object.hashCode方法的一般协定
+     * 特别是，c1.equals(c2)意味着c1.hashCode()==c2.hashCode()
      *
-     * @return the hash code value for this collection
-     *
+     * @return 此集合的哈希值
      * @see Object#hashCode()
      * @see Object#equals(Object)
      */
     int hashCode();
 
     /**
-     * Creates a {@link Spliterator} over the elements in this collection.
+     * 在此集合中的元素上创建{@link Spliterator}
      *
-     * Implementations should document characteristic values reported by the
-     * spliterator.  Such characteristic values are not required to be reported
-     * if the spliterator reports {@link Spliterator#SIZED} and this collection
-     * contains no elements.
-     *
-     * <p>The default implementation should be overridden by subclasses that
-     * can return a more efficient spliterator.  In order to
-     * preserve expected laziness behavior for the {@link #stream()} and
-     * {@link #parallelStream()}} methods, spliterators should either have the
-     * characteristic of {@code IMMUTABLE} or {@code CONCURRENT}, or be
-     * <em><a href="Spliterator.html#binding">late-binding</a></em>.
-     * If none of these is practical, the overriding class should describe the
-     * spliterator's documented policy of binding and structural interference,
-     * and should override the {@link #stream()} and {@link #parallelStream()}
-     * methods to create streams using a {@code Supplier} of the spliterator,
-     * as in:
-     * <pre>{@code
-     *     Stream<E> s = StreamSupport.stream(() -> spliterator(), spliteratorCharacteristics)
-     * }</pre>
-     * <p>These requirements ensure that streams produced by the
-     * {@link #stream()} and {@link #parallelStream()} methods will reflect the
-     * contents of the collection as of initiation of the terminal stream
-     * operation.
-     *
-     * @implSpec
-     * The default implementation creates a
-     * <em><a href="Spliterator.html#binding">late-binding</a></em> spliterator
-     * from the collections's {@code Iterator}.  The spliterator inherits the
-     * <em>fail-fast</em> properties of the collection's iterator.
-     * <p>
-     * The created {@code Spliterator} reports {@link Spliterator#SIZED}.
-     *
-     * @implNote
-     * The created {@code Spliterator} additionally reports
-     * {@link Spliterator#SUBSIZED}.
-     *
-     * <p>If a spliterator covers no elements then the reporting of additional
-     * characteristic values, beyond that of {@code SIZED} and {@code SUBSIZED},
-     * does not aid clients to control, specialize or simplify computation.
-     * However, this does enable shared use of an immutable and empty
-     * spliterator instance (see {@link Spliterators#emptySpliterator()}) for
-     * empty collections, and enables clients to determine if such a spliterator
-     * covers no elements.
-     *
-     * @return a {@code Spliterator} over the elements in this collection
+     * @return 此集合中元素上的{@code Spliterator}
      * @since 1.8
      */
     @Override
@@ -363,18 +232,9 @@ public interface Collection<E> extends Iterable<E> {
     }
 
     /**
-     * Returns a sequential {@code Stream} with this collection as its source.
+     * 返回一个连续的Stream，并将此集合作为其源
      *
-     * <p>This method should be overridden when the {@link #spliterator()}
-     * method cannot return a spliterator that is {@code IMMUTABLE},
-     * {@code CONCURRENT}, or <em>late-binding</em>. (See {@link #spliterator()}
-     * for details.)
-     *
-     * @implSpec
-     * The default implementation creates a sequential {@code Stream} from the
-     * collection's {@code Spliterator}.
-     *
-     * @return a sequential {@code Stream} over the elements in this collection
+     * @return 返回一个连续的Stream
      * @since 1.8
      */
     default Stream<E> stream() {
@@ -382,20 +242,9 @@ public interface Collection<E> extends Iterable<E> {
     }
 
     /**
-     * Returns a possibly parallel {@code Stream} with this collection as its
-     * source.  It is allowable for this method to return a sequential stream.
+     * 返回一个可能并行的Stream，并将此集合作为其源。此方法允许返回顺序流。
      *
-     * <p>This method should be overridden when the {@link #spliterator()}
-     * method cannot return a spliterator that is {@code IMMUTABLE},
-     * {@code CONCURRENT}, or <em>late-binding</em>. (See {@link #spliterator()}
-     * for details.)
-     *
-     * @implSpec
-     * The default implementation creates a parallel {@code Stream} from the
-     * collection's {@code Spliterator}.
-     *
-     * @return a possibly parallel {@code Stream} over the elements in this
-     * collection
+     * @return 此集合中的元素上可能并行的Stream
      * @since 1.8
      */
     default Stream<E> parallelStream() {
