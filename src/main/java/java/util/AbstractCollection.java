@@ -130,10 +130,8 @@ public abstract class AbstractCollection<E> implements java.util.Collection<E> {
     }
 
     /**
-     * The maximum size of array to allocate.
-     * Some VMs reserve some header words in an array.
-     * Attempts to allocate larger arrays may result in
-     * OutOfMemoryError: Requested array size exceeds VM limit
+     * 要分配的数组的最大大小
+     * 某些VM会在数组中保留一些header。尝试分配更大的数组可能会导致OutOfMemoryError：请求的数组大小超过VM限制
      */
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 

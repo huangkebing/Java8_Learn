@@ -1,6 +1,8 @@
 package com.hkb;
 
 import org.junit.Test;
+import org.openjdk.jol.info.ClassLayout;
+import org.openjdk.jol.vm.VM;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,5 +100,11 @@ public class ListTest {
         for (Integer integer : list) {
             System.out.println(integer);
         }
+    }
+
+    @Test
+    public void arrayHeaderTest(){
+        System.out.println(VM.current().details());
+        System.out.println(ClassLayout.parseInstance(new String[4]).toPrintable());
     }
 }
