@@ -107,4 +107,18 @@ public class ListTest {
         System.out.println(VM.current().details());
         System.out.println(ClassLayout.parseInstance(new String[4]).toPrintable());
     }
+
+    @Test
+    public void cloneTest() throws CloneNotSupportedException {
+        CloneObject object = new CloneObject();
+        // java.lang.CloneNotSupportedException: com.hkb.CloneObject
+        Object clone = object.clone();
+    }
+}
+
+class CloneObject implements Cloneable{
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }
