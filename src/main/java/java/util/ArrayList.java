@@ -84,43 +84,39 @@ public class ArrayList<E> extends AbstractList<E>
     private static final long serialVersionUID = 8683452581122892189L;
 
     /**
-     * Default initial capacity.
+     * 初始容量10
      */
     private static final int DEFAULT_CAPACITY = 10;
 
     /**
-     * Shared empty array instance used for empty instances.
+     * 共享的空数组实例，用于空实例
      */
     private static final Object[] EMPTY_ELEMENTDATA = {};
 
     /**
-     * Shared empty array instance used for default sized empty instances. We
-     * distinguish this from EMPTY_ELEMENTDATA to know how much to inflate when
-     * first element is added.
+     * 共享的空数组实例，用于默认容量的空实例
+     * 我们将其与EMPTY_ELEMENTDATA区分开来，以了解添加第一个元素时要扩容多少
      */
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
 
     /**
-     * The array buffer into which the elements of the ArrayList are stored.
-     * The capacity of the ArrayList is the length of this array buffer. Any
-     * empty ArrayList with elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA
-     * will be expanded to DEFAULT_CAPACITY when the first element is added.
+     * 存储数组列表元素的数组缓冲区，ArrayList的容量就是该数组的长度
+     * 所有空且elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA的ArrayList，
+     * 会在第一个元素插入时扩容成DEFAULT_CAPACITY
+     * 非private，以简化近类访问
      */
-    transient Object[] elementData; // non-private to simplify nested class access
+    transient Object[] elementData;
 
     /**
-     * The size of the ArrayList (the number of elements it contains).
-     *
-     * @serial
+     * 数组列表的大小（它包含的元素数）
      */
     private int size;
 
     /**
-     * Constructs an empty list with the specified initial capacity.
+     * 构造具有指定初始容量的空列表
      *
-     * @param  initialCapacity  the initial capacity of the list
-     * @throws IllegalArgumentException if the specified initial capacity
-     *         is negative
+     * @param  initialCapacity list的初始容量
+     * @throws IllegalArgumentException 如果指定的初始容量为负
      */
     public ArrayList(int initialCapacity) {
         if (initialCapacity > 0) {
@@ -128,25 +124,22 @@ public class ArrayList<E> extends AbstractList<E>
         } else if (initialCapacity == 0) {
             this.elementData = EMPTY_ELEMENTDATA;
         } else {
-            throw new IllegalArgumentException("Illegal Capacity: "+
-                                               initialCapacity);
+            throw new IllegalArgumentException("Illegal Capacity: "+ initialCapacity);
         }
     }
 
     /**
-     * Constructs an empty list with an initial capacity of ten.
+     * 构造初始容量为10的空列表
      */
     public ArrayList() {
         this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
     }
 
     /**
-     * Constructs a list containing the elements of the specified
-     * collection, in the order they are returned by the collection's
-     * iterator.
+     * 按照集合的迭代器返回的顺序构造包含指定集合的元素的列表
      *
-     * @param c the collection whose elements are to be placed into this list
-     * @throws NullPointerException if the specified collection is null
+     * @param c 要将其元素放入此列表中的集合
+     * @throws NullPointerException 如果指定的集合为 null
      */
     public ArrayList(java.util.Collection<? extends E> c) {
         elementData = c.toArray();
@@ -211,10 +204,7 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * The maximum size of array to allocate.
-     * Some VMs reserve some header words in an array.
-     * Attempts to allocate larger arrays may result in
-     * OutOfMemoryError: Requested array size exceeds VM limit
+     * 要分配的数组的最大大小，某些 VM 会在数组中保留一些标头字。尝试分配更大的阵列可能会导致OutOfMemoryError：请求的数组大小超过 VM 限制
      */
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
