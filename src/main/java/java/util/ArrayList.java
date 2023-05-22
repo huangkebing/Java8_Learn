@@ -235,42 +235,37 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Returns the number of elements in this list.
+     * 返回size，即集合中的元素个数
      *
-     * @return the number of elements in this list
+     * @return size
      */
     public int size() {
         return size;
     }
 
     /**
-     * Returns <tt>true</tt> if this list contains no elements.
+     * 如果集合中不包含元素，即size为0，返回true
      *
-     * @return <tt>true</tt> if this list contains no elements
+     * @return true/false
      */
     public boolean isEmpty() {
         return size == 0;
     }
 
     /**
-     * Returns <tt>true</tt> if this list contains the specified element.
-     * More formally, returns <tt>true</tt> if and only if this list contains
-     * at least one element <tt>e</tt> such that
-     * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>.
+     * 判断集合中是否包含指定的元素o
+     * 通过indexOf实现，如果indexOf的结果为-1则>=0不满足为false。反之为true
      *
-     * @param o element whose presence in this list is to be tested
-     * @return <tt>true</tt> if this list contains the specified element
+     * @param o 要测试其在此列表中是否存在的元素
+     * @return true/false
      */
     public boolean contains(Object o) {
         return indexOf(o) >= 0;
     }
 
     /**
-     * Returns the index of the first occurrence of the specified element
-     * in this list, or -1 if this list does not contain the element.
-     * More formally, returns the lowest index <tt>i</tt> such that
-     * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
-     * or -1 if there is no such index.
+     * 返回此列表中指定元素第一次出现的索引满足条件：(o==null ? get(i)==null : o.equals(get(i)))
+     * 如果此列表中不包含该元素，则返回-1
      */
     public int indexOf(Object o) {
         if (o == null) {
@@ -286,11 +281,8 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Returns the index of the last occurrence of the specified element
-     * in this list, or -1 if this list does not contain the element.
-     * More formally, returns the highest index <tt>i</tt> such that
-     * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
-     * or -1 if there is no such index.
+     * 返回此列表中指定元素最后一次出现的索引满足条件：(o==null ? get(i)==null : o.equals(get(i)))
+     * 如果此列表中不包含该元素，则返回-1
      */
     public int lastIndexOf(Object o) {
         if (o == null) {
@@ -306,10 +298,9 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Returns a shallow copy of this <tt>ArrayList</tt> instance.  (The
-     * elements themselves are not copied.)
+     * 返回此 ArrayList 实例的浅拷贝副本。
      *
-     * @return a clone of this <tt>ArrayList</tt> instance
+     * @return 此ArrayList的一个拷贝副本
      */
     public Object clone() {
         try {
@@ -318,59 +309,42 @@ public class ArrayList<E> extends AbstractList<E>
             v.modCount = 0;
             return v;
         } catch (CloneNotSupportedException e) {
-            // this shouldn't happen, since we are Cloneable
             throw new InternalError(e);
         }
     }
 
     /**
-     * Returns an array containing all of the elements in this list
-     * in proper sequence (from first to last element).
+     * 返回一个数组，该数组按正确的顺序（从第一个元素到最后一个元素）包含此列表中的所有元素
+     * 返回的数组将是“安全的”，此方法必须分配一个新数组
+     * 因此，调用方可以自由修改返回的数组(这里的修改如果指的是不可变对象的替换，如果修改了可变对象的值依旧会影响原集合)
+     * 此方法充当基于数组和基于集合的 API 之间的桥梁
      *
-     * <p>The returned array will be "safe" in that no references to it are
-     * maintained by this list.  (In other words, this method must allocate
-     * a new array).  The caller is thus free to modify the returned array.
-     *
-     * <p>This method acts as bridge between array-based and collection-based
-     * APIs.
-     *
-     * @return an array containing all of the elements in this list in
-     *         proper sequence
+     * @return 以正确顺序包含此列表中所有元素的数组
      */
     public Object[] toArray() {
         return Arrays.copyOf(elementData, size);
     }
 
     /**
-     * Returns an array containing all of the elements in this list in proper
-     * sequence (from first to last element); the runtime type of the returned
-     * array is that of the specified array.  If the list fits in the
-     * specified array, it is returned therein.  Otherwise, a new array is
-     * allocated with the runtime type of the specified array and the size of
-     * this list.
+     * 返回一个数组，其中包含此列表中所有元素的正确顺序（从第一个到最后一个元素）;返回数组的运行时类型是指定数组的运行时类型。
+     * 如果列表适合指定的数组，则在其中返回该列表。否则，将分配一个具有指定数组的运行时类型和此列表大小的新数组。
      *
-     * <p>If the list fits in the specified array with room to spare
-     * (i.e., the array has more elements than the list), the element in
-     * the array immediately following the end of the collection is set to
-     * <tt>null</tt>.  (This is useful in determining the length of the
-     * list <i>only</i> if the caller knows that the list does not contain
-     * any null elements.)
+     * 如果列表适合指定的数组，并留出空间（即数组的元素比列表多），则紧跟在集合末尾之后的数组中的元素设置为null。
+     * 仅当调用方知道列表不包含任何 null 元素时，这在确定列表的长度时才很有用。
      *
-     * @param a the array into which the elements of the list are to
-     *          be stored, if it is big enough; otherwise, a new array of the
-     *          same runtime type is allocated for this purpose.
-     * @return an array containing the elements of the list
-     * @throws ArrayStoreException if the runtime type of the specified array
-     *         is not a supertype of the runtime type of every element in
-     *         this list
-     * @throws NullPointerException if the specified array is null
+     * @param a 要存储列表元素的数组（如果它足够大）;否则，将为此目的分配相同运行时类型的新数组
+     * @return 包含列表元素的数组
+     * @throws ArrayStoreException 如果指定数组的运行时类型不是此列表中每个元素的运行时类型的超类型
+     * @throws NullPointerException 如果指定的数组为空
      */
     @SuppressWarnings("unchecked")
     public <T> T[] toArray(T[] a) {
         if (a.length < size)
-            // Make a new array of a's runtime type, but my contents:
+            // 数量不足存放时，创建一个运行时类型的新数组
             return (T[]) Arrays.copyOf(elementData, size, a.getClass());
+        // 数量足够时，直接使用原数组
         System.arraycopy(elementData, 0, a, 0, size);
+        // 有多的元素时，最后一个集合元素之后的元素置为null
         if (a.length > size)
             a[size] = null;
         return a;
