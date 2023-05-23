@@ -46,4 +46,10 @@ public class ArrayListTests {
             return "Inner{number=" + number + '}';
         }
     }
+
+    @Test
+    public void addTest(){
+        int[] ints = new int[10];
+        System.arraycopy(ints, -5, ints, 3, 2);
+    }
 }

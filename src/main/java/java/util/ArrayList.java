@@ -154,9 +154,9 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Trims the capacity of this <tt>ArrayList</tt> instance to be the
-     * list's current size.  An application can use this operation to minimize
-     * the storage of an <tt>ArrayList</tt> instance.
+     * 将此ArrayList实例的容量修剪为列表的当前大小。应用程序可以使用此操作来最小化ArrayList 实例的存储。
+     * 能想到的场景，存放一部分数据在List中用做应用缓存，可以在数据加载后执行一下trimToSize()节约部分内存
+     * 如果是经常修改的List，则没有意义调用此方法
      */
     public void trimToSize() {
         modCount++;
@@ -168,20 +168,15 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Increases the capacity of this <tt>ArrayList</tt> instance, if
-     * necessary, to ensure that it can hold at least the number of elements
-     * specified by the minimum capacity argument.
+     * 如有必要，增加此ArrayList实例的容量，以确保它至少可以容纳最小容量参数指定的元素数
+     * 个人认为，指定初始容量的构造器可以实现类似的功能
      *
-     * @param   minCapacity   the desired minimum capacity
+     * @param minCapacity 所需的最小容量
      */
     public void ensureCapacity(int minCapacity) {
-        int minExpand = (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA)
-            // any size if not default element table
-            ? 0
-            // larger than default for default empty table. It's already
-            // supposed to be at default size.
-            : DEFAULT_CAPACITY;
-
+        // 如果是默认空表，则minExpand为10；否则为0
+        int minExpand = (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) ? 0 : DEFAULT_CAPACITY;
+        // 执行最小容量>minExpand执行扩容
         if (minCapacity > minExpand) {
             ensureExplicitCapacity(minCapacity);
         }
@@ -350,8 +345,7 @@ public class ArrayList<E> extends AbstractList<E>
         return a;
     }
 
-    // Positional Access Operations
-
+    //--------------位置访问操作-----------------
     @SuppressWarnings("unchecked")
     E elementData(int index) {
         return (E) elementData[index];
@@ -371,13 +365,12 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Replaces the element at the specified position in this list with
-     * the specified element.
+     * 将此列表中指定位置的元素替换为指定的元素。
      *
-     * @param index index of the element to replace
-     * @param element element to be stored at the specified position
-     * @return the element previously at the specified position
-     * @throws IndexOutOfBoundsException {@inheritDoc}
+     * @param index 要替换的元素的索引
+     * @param element 要存储在指定位置的元素
+     * @return 先前位于指定位置的元素
+     * @throws IndexOutOfBoundsException 数组下标越界移除
      */
     public E set(int index, E element) {
         rangeCheck(index);
@@ -388,32 +381,32 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Appends the specified element to the end of this list.
+     * 将指定的元素追加到此列表的末尾
      *
-     * @param e element to be appended to this list
-     * @return <tt>true</tt> (as specified by {@link java.util.Collection#add})
+     * @param e 要附加到此列表的元素
+     * @return true，如果添加成功
      */
     public boolean add(E e) {
-        ensureCapacityInternal(size + 1);  // Increments modCount!!
+        // 检查容量，不管是否触发扩容，都会影响modCount
+        ensureCapacityInternal(size + 1);
         elementData[size++] = e;
         return true;
     }
 
     /**
-     * Inserts the specified element at the specified position in this
-     * list. Shifts the element currently at that position (if any) and
-     * any subsequent elements to the right (adds one to their indices).
+     * 在此列表中的指定位置插入指定的元素。将当前位于该位置的元素（如果有）和任何后续元素向右移动
      *
-     * @param index index at which the specified element is to be inserted
-     * @param element element to be inserted
-     * @throws IndexOutOfBoundsException {@inheritDoc}
+     * @param index 要在其中插入指定元素的索引
+     * @param element 要插入的元素
+     * @throws IndexOutOfBoundsException 数组下标越界
      */
     public void add(int index, E element) {
         rangeCheckForAdd(index);
-
-        ensureCapacityInternal(size + 1);  // Increments modCount!!
-        System.arraycopy(elementData, index, elementData, index + 1,
-                         size - index);
+        // 检查容量，不管是否触发扩容，都会影响modCount
+        ensureCapacityInternal(size + 1);
+        // 入参的含义为：原数组、原数组的起始位置、目标数组、目标数组的起始位置、长度
+        // 此处即将下标为[index,size-1]的元素往后移动一个位置
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = element;
         size++;
     }
@@ -582,10 +575,9 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Checks if the given index is in range.  If not, throws an appropriate
-     * runtime exception.  This method does *not* check if the index is
-     * negative: It is always used immediately prior to an array access,
-     * which throws an ArrayIndexOutOfBoundsException if index is negative.
+     * 检查给定索引是否在范围内。如果不是，则引发相应的运行时异常
+     * 需要校验和size的大小关系，因为数组的容量是大于size的，当index>=size但小于数组长度时并不会抛出异常，但不符合预期
+     * 不检查索引是否为负数：它总是在数组访问之前使用，如果索引为负数，则会抛出 ArrayIndexOutOfBoundsException。
      */
     private void rangeCheck(int index) {
         if (index >= size)
@@ -593,7 +585,9 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * A version of rangeCheck used by add and addAll.
+     * add和addAll使用的 rangeCheck 版本
+     * 此处条件是index>size,因为涉及要新增，会在原集合上多一个元素
+     * 需要校验负数是因为如果不校验，可能会引起不必要的扩容
      */
     private void rangeCheckForAdd(int index) {
         if (index > size || index < 0)
