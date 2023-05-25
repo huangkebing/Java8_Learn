@@ -49,7 +49,9 @@ public class ArrayListTests {
 
     @Test
     public void addTest(){
-        int[] ints = new int[10];
-        System.arraycopy(ints, -5, ints, 3, 2);
+        Inner[] ints = {new Inner(1),new Inner(2),new Inner(3),new Inner(4),new Inner(5)};
+        System.arraycopy(ints, 3, ints, 2, 2);
+        ints[4].setNumber(7);
+        System.out.println(Arrays.toString(ints));
     }
 }
