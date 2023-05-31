@@ -728,11 +728,20 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * An optimized version of AbstractList.Itr
+     * AbstractList.Itr 的优化版本
      */
     private class Itr implements Iterator<E> {
-        int cursor;       // index of next element to return
-        int lastRet = -1; // index of last element returned; -1 if no such
+        /**
+         * 要返回的下一个元素的索引
+         */
+        int cursor;
+        /**
+         * 返回的最后一个元素的索引;-1为默认值，代表还没有元素返回
+         */
+        int lastRet = -1;
+        /**
+         * 创建迭代器时的modCount快照
+         */
         int expectedModCount = modCount;
 
         public boolean hasNext() {
@@ -783,7 +792,7 @@ public class ArrayList<E> extends AbstractList<E>
             while (i != size && modCount == expectedModCount) {
                 consumer.accept((E) elementData[i++]);
             }
-            // update once at end of iteration to reduce heap write traffic
+            // 在迭代结束时更新一次以减少堆写入流量
             cursor = i;
             lastRet = i - 1;
             checkForComodification();

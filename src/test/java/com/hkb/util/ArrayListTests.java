@@ -2,8 +2,7 @@ package com.hkb.util;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class ArrayListTests {
 
@@ -48,10 +47,19 @@ public class ArrayListTests {
     }
 
     @Test
-    public void addTest(){
-        Inner[] ints = {new Inner(1),new Inner(2),new Inner(3),new Inner(4),new Inner(5)};
-        System.arraycopy(ints, 3, ints, 2, 2);
-        ints[4].setNumber(7);
-        System.out.println(Arrays.toString(ints));
+    public void subListTest(){
+        ArrayList<Integer> inners = new ArrayList<>();
+        inners.add(1);
+        inners.add(2);
+        inners.add(3);
+        inners.add(4);
+        inners.add(5);
+        List<Integer> list = inners.subList(0, 3);
+        System.out.println(list.getClass());
+        Set<Integer> set = new HashSet<>();
+        set.add(1);
+        list.removeAll(set);
+        System.out.println(list);
+        System.out.println(inners);
     }
 }
